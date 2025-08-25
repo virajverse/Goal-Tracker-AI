@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Hint browsers to render native controls in dark mode where supported */
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Glass dropdown transparency + scrollbar */
+.glass-dropdown {
+  background-color: transparent;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent; /* Firefox */
+  scrollbar-width: thin;
+}
+
+/* WebKit scrollbar styling */
+.glass-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+.glass-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+.glass-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Dark dropdowns: ensure options are readable in dark theme */
+select option {
+  background-color: #0f172a; /* slate-900 */
+  color: #f8fafc; /* slate-50 */
+}
+
+/* Better focus ring on selects for accessibility */
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.35); /* purple-400 */
+  border-color: rgba(255, 255, 255, 0.35);
+}

@@ -1,0 +1,43 @@
+{
+  "name": "goal-tracker-ai",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.45.0",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.510.0",
+    "next": "^15.0.0",
+    "openai": "^5.12.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-hot-toast": "^2.5.2",
+    "recharts": "^3.1.2",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.25.1",
+    "@types/node": "22.14.1",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
+    "autoprefixer": "^10.4.21",
+    "eslint": "9.25.1",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "globals": "15.15.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.31.0"
+  },
+  "scripts": {
+    "build": "next build",
+    "build:next": "next build",
+    "check": "tsc --noEmit && next build",
+    "dev": "next dev",
+    "dev:next": "next dev",
+    "start": "next start",
+    "start:next": "next start",
+    "lint": "eslint ."
+  }
+}

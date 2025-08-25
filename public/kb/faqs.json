@@ -1,0 +1,872 @@
+{
+  "faqs": [
+    {
+      "id": 1,
+      "question": "What is GoalTracker AI?",
+      "answer": "GoalTracker AI helps you set goals, track daily progress, and get AI-powered guidance to stay consistent and improve productivity.",
+      "category": "Getting Started",
+      "tags": "about,overview,intro"
+    },
+    {
+      "id": 2,
+      "question": "How do I create an account?",
+      "answer": "Click 'Login / Sign Up' in the header and switch to Sign Up. Enter your name, email, and password, then submit to create your account.",
+      "category": "Getting Started",
+      "tags": "signup,account,new user"
+    },
+    {
+      "id": 3,
+      "question": "Can I browse without logging in?",
+      "answer": "Yes. You can explore the dashboard and content without logging in. Actions that change data (e.g., creating or editing goals) will prompt a login modal.",
+      "category": "Accounts & Auth",
+      "tags": "anonymous,browse,login modal"
+    },
+    {
+      "id": 4,
+      "question": "Why do I see a login popup when I try to edit or create something?",
+      "answer": "Editing, creating, or deleting data requires authentication. The app shows a login modal for unauthenticated users when they try restricted actions.",
+      "category": "Accounts & Auth",
+      "tags": "authentication,permissions,modal"
+    },
+    {
+      "id": 5,
+      "question": "Is there a demo account I can use?",
+      "answer": "Yes. Use Email: demo@example.com and Password: Demo123! to quickly explore the app without creating a new account.",
+      "category": "Getting Started",
+      "tags": "demo,credentials,test account"
+    },
+    {
+      "id": 6,
+      "question": "How do I create a new goal?",
+      "answer": "Go to the Goals page and click the add/create goal button. Fill in the goal details and save. If you are not logged in, you will be prompted to log in first.",
+      "category": "Goals",
+      "tags": "create goal,add goal,new goal"
+    },
+    {
+      "id": 7,
+      "question": "How do I edit or delete a goal?",
+      "answer": "On the Goals page, open a goal card and use the edit or delete actions. You must be logged in to make changes.",
+      "category": "Goals",
+      "tags": "edit goal,delete goal,manage goals"
+    },
+    {
+      "id": 8,
+      "question": "What goal details can I track?",
+      "answer": "Each goal supports a title, category, notes, and completion status. You can also add daily logs to track progress over time.",
+      "category": "Goals",
+      "tags": "fields,notes,completion,status"
+    },
+    {
+      "id": 9,
+      "question": "How do I mark a goal as complete?",
+      "answer": "Open the goal card and toggle the completion control. Completed goals are displayed accordingly in the dashboard.",
+      "category": "Goals",
+      "tags": "complete,done,toggle"
+    },
+    {
+      "id": 10,
+      "question": "How do daily logs work?",
+      "answer": "Daily logs let you record what you did toward a goal each day. Visit the Today or Daily page to add or update your logs.",
+      "category": "Daily Logs",
+      "tags": "logs,progress,today"
+    },
+    {
+      "id": 11,
+      "question": "Can I add notes to daily logs or goals?",
+      "answer": "Yes. Use the notes fields on goal cards or within daily logs to capture details, learnings, or blockers.",
+      "category": "Daily Logs",
+      "tags": "notes,details,journal"
+    },
+    {
+      "id": 12,
+      "question": "How do I use the AI Chat?",
+      "answer": "Open the AI Chat page from the header, type your question, and press Send. The assistant will reply with helpful guidance.",
+      "category": "AI Chat",
+      "tags": "chat,assistant,help"
+    },
+    {
+      "id": 13,
+      "question": "What topics can the AI help with?",
+      "answer": "The AI specializes in goals, habits, productivity, health, and related guidance. It may refuse unsupported topics based on policy.",
+      "category": "AI Chat",
+      "tags": "topics,scope,policy"
+    },
+    {
+      "id": 14,
+      "question": "I got 'Failed to get response from AI'. What should I do?",
+      "answer": "Please try again in a few seconds. If the issue persists, check your internet connection or contact support. During development, verify your API key in .env.local.",
+      "category": "AI Chat",
+      "tags": "error,ai,network,api key"
+    },
+    {
+      "id": 15,
+      "question": "Where is my data stored?",
+      "answer": "Your account and app data are stored in Supabase. We use secure APIs to read and write your data.",
+      "category": "Data & Privacy",
+      "tags": "supabase,storage,database"
+    },
+    {
+      "id": 16,
+      "question": "Is my data secure?",
+      "answer": "Yes. We use industry-standard security practices. Keep your credentials private and log out on shared devices.",
+      "category": "Data & Privacy",
+      "tags": "security,privacy,safety"
+    },
+    {
+      "id": 17,
+      "question": "The Questions page is empty. Why?",
+      "answer": "If you see no results, it may mean there are no FAQs yet or your search/filter hides all items. Clear the search box and set category to 'All'.",
+      "category": "Troubleshooting",
+      "tags": "faq,empty,no results,filter"
+    },
+    {
+      "id": 18,
+      "question": "The AI said my topic isn't supported. What does that mean?",
+      "answer": "Some topics may be blocked by policy for safety reasons. Try asking about goals, habits, productivity, health, or related areas.",
+      "category": "AI Chat",
+      "tags": "blocked,policy,content"
+    },
+    {
+      "id": 19,
+      "question": "Where can I find the Questions page?",
+      "answer": "Click 'Questions' in the header navigation or go to /questions.",
+      "category": "Navigation",
+      "tags": "kb,faq,link"
+    },
+    {
+      "id": 20,
+      "question": "Where is the AI Chat page?",
+      "answer": "Use the 'AI Chat' link in the header or visit /chat.",
+      "category": "Navigation",
+      "tags": "chat,assistant,link"
+    },
+    {
+      "id": 21,
+      "question": "How do I report a bug or request a feature?",
+      "answer": "Please share steps to reproduce, screenshots if possible, and expected vs actual behavior. Contact the project maintainer or open an issue in your team workflow.",
+      "category": "Support",
+      "tags": "bugs,feature request,help"
+    },
+    {
+      "id": 22,
+      "question": "Are there any usage limits?",
+      "answer": "Fair-use limits may apply to AI requests to ensure reliability. If you encounter rate limits, wait a bit and try again.",
+      "category": "Limits",
+      "tags": "rate limit,usage,quota"
+    },
+    {
+      "id": 23,
+      "question": "Which languages are supported?",
+      "answer": "The interface and responses are optimized for English.",
+      "category": "Localization",
+      "tags": "language,english,i18n"
+    },
+    {
+      "id": 24,
+      "question": "Which browsers are supported?",
+      "answer": "Modern evergreen browsers (Chrome, Edge, Firefox, Safari) are supported. Keep your browser updated for the best experience.",
+      "category": "System Requirements",
+      "tags": "browser,support,compatibility"
+    },
+    {
+      "id": 25,
+      "question": "How do I build a growth mindset?",
+      "answer": "Start by embracing challenges, viewing setbacks as information, and praising effort over talent. Track small improvements daily and reflect on what you learned, not just outcomes.",
+      "category": "Questions",
+      "tags": "mindset,growth mindset,learning,reflection,progress"
+    },
+    {
+      "id": 26,
+      "question": "How can I stay motivated on long-term goals?",
+      "answer": "Break the goal into weekly milestones, celebrate micro-wins, and review your 'why' each morning. Keep your plan visible and commit to a consistent schedule, not just feelings.",
+      "category": "Questions",
+      "tags": "motivation,long-term,goals,milestones,consistency"
+    },
+    {
+      "id": 27,
+      "question": "What should I do when I feel stuck or procrastinating?",
+      "answer": "Lower the activation energy: do a 2-minute starter task, set a 10-minute timer, and remove distractions. Once you begin, momentum will make the next step easier.",
+      "category": "Questions",
+      "tags": "procrastination,stuck,activation energy,2-minute rule,momentum"
+    },
+    {
+      "id": 28,
+      "question": "How do I bounce back after failure?",
+      "answer": "Run a quick post-mortem: what worked, what didn’t, and what to try next. Reframe failure as feedback, set a small correction step, and restart within 24 hours.",
+      "category": "Questions",
+      "tags": "failure,resilience,learning,post-mortem,reframe"
+    },
+    {
+      "id": 29,
+      "question": "How can I set motivating goals I actually care about?",
+      "answer": "Use the 'why x3' test to connect goals to personal values. Make them specific, time-bound, and exciting, and write the first tiny action you’ll take today.",
+      "category": "Questions",
+      "tags": "goal-setting,values,intrinsic motivation,smart goals,clarity"
+    },
+    {
+      "id": 30,
+      "question": "How do I create momentum when energy is low?",
+      "answer": "Switch to a low-friction task, stand up, hydrate, and set a 5-minute focus sprint. Momentum often returns once you start and see progress.",
+      "category": "Questions",
+      "tags": "energy,momentum,low energy,small steps,focus"
+    },
+    {
+      "id": 31,
+      "question": "How can I avoid burnout while staying driven?",
+      "answer": "Use sustainable pacing: cap daily effort, schedule recovery blocks, and rotate task intensity. Protect sleep and keep one non-negotiable recharge habit.",
+      "category": "Questions",
+      "tags": "burnout,balance,recovery,rest,stress"
+    },
+    {
+      "id": 32,
+      "question": "Does positive self-talk really help? How do I start?",
+      "answer": "Yes—language shapes focus. Replace harsh self-criticism with neutral prompts (e.g., 'What’s the next small step?') and keep a list of affirming statements near your workspace.",
+      "category": "Questions",
+      "tags": "self-talk,affirmations,mindset,cognition,focus"
+    },
+    {
+      "id": 33,
+      "question": "How can I keep going when results are slow?",
+      "answer": "Switch your scoreboard to inputs over outcomes: sessions, minutes, or reps. Trust the lag—compound gains appear after consistency, not intensity.",
+      "category": "Questions",
+      "tags": "consistency,compound interest,process,inputs,patience"
+    },
+    {
+      "id": 34,
+      "question": "What’s an effective morning routine to boost motivation?",
+      "answer": "Keep it short: water, light movement, 5-minute planning, and one meaningful task before messages. Consistency beats elaborate routines.",
+      "category": "Questions",
+      "tags": "morning routine,rituals,planning,habits,energy"
+    },
+    {
+      "id": 35,
+      "question": "How can I visualize success effectively?",
+      "answer": "Visualize both the outcome and the process: see yourself handling obstacles calmly and executing key steps. Pair it with action—start immediately after visualizing.",
+      "category": "Questions",
+      "tags": "visualization,mental rehearsal,process goals,focus,confidence"
+    },
+    {
+      "id": 36,
+      "question": "How do I overcome fear of starting?",
+      "answer": "Shrink the first step until it feels safe—often 5 minutes or less. Pre-commit a time and place, and remove one friction (tool, file, or tab) in advance.",
+      "category": "Questions",
+      "tags": "fear,start,friction,pre-commitment,activation energy"
+    },
+    {
+      "id": 37,
+      "question": "How can I stay consistent without relying on motivation?",
+      "answer": "Use implementation intentions (If X, then Y), stack behaviors onto existing habits, and track streaks weekly. Systems sustain you when motivation dips.",
+      "category": "Questions",
+      "tags": "consistency,implementation intentions,habit stacking,systems,streaks"
+    },
+    {
+      "id": 38,
+      "question": "How do I deal with comparison and imposter syndrome?",
+      "answer": "Compare to your past self, not others. Keep an evidence list of wins, ask for specific feedback, and remember progress > perfection.",
+      "category": "Questions",
+      "tags": "imposter syndrome,comparison,self-esteem,feedback,growth"
+    },
+    {
+      "id": 39,
+      "question": "How can I use accountability to stay motivated?",
+      "answer": "Share weekly goals with a buddy or group, report results publicly, and schedule co-working sessions. Clear commitments increase follow-through.",
+      "category": "Questions",
+      "tags": "accountability,buddy,public commitment,co-working,follow-through"
+    },
+    {
+      "id": 40,
+      "question": "How do I make small wins feel meaningful?",
+      "answer": "Journal one sentence about progress and what enabled it. Reward consistency with a tiny celebration to reinforce the identity you want.",
+      "category": "Questions",
+      "tags": "small wins,celebration,identity,reinforcement,journaling"
+    },
+    {
+      "id": 41,
+      "question": "How can I cultivate daily discipline?",
+      "answer": "Decide once: set fixed start times, remove choices, and use checklists. Discipline is easier when you reduce decisions and automate first steps.",
+      "category": "Questions",
+      "tags": "discipline,routines,checklists,decision fatigue,automation"
+    },
+    {
+      "id": 42,
+      "question": "Can environment or music boost motivation?",
+      "answer": "Yes. Prime your space with a clean desk, single-task setup, and a 'start' playlist. Environmental cues reduce friction and trigger focus.",
+      "category": "Questions",
+      "tags": "environment,music,focus,context cues,workspace"
+    },
+    {
+      "id": 43,
+      "question": "How do I reframe negative thoughts quickly?",
+      "answer": "Use the 'evidence and alternative' test: What evidence supports this thought? What’s an equally realistic alternative? Practice neutral, action-oriented phrasing.",
+      "category": "Questions",
+      "tags": "cognitive reframing,negativity bias,mindset,CBT,focus"
+    },
+    {
+      "id": 44,
+      "question": "What’s a quick 5-minute mindset reset?",
+      "answer": "Stand up, breathe 4-7-8, write one next step, set a 5-minute timer, and begin. Action creates clarity and restarts momentum.",
+      "category": "Questions",
+      "tags": "reset,breathing,4-7-8,next step,5-minute rule,momentum"
+    },
+    {
+      "id": 45,
+      "question": "What’s the best beginner workout plan?",
+      "answer": "Start with 3 days/week full-body: push, pull, legs, plus 20 minutes brisk walking on off days. Focus on form and progressive overload.",
+      "category": "Questions",
+      "tags": "health,fitness,beginner,workout plan,progressive overload"
+    },
+    {
+      "id": 46,
+      "question": "How many steps per day should I aim for?",
+      "answer": "7,000–10,000 steps/day is a practical target for general health; pick a baseline now and add 1,000 steps every 1–2 weeks.",
+      "category": "Questions",
+      "tags": "steps,walking,cardio,activity,health"
+    },
+    {
+      "id": 47,
+      "question": "Is cardio or strength training better for fat loss?",
+      "answer": "Both help, but strength preserves muscle while a calorie deficit drives fat loss. Combine 2–3 strength sessions with 2 light cardio days.",
+      "category": "Questions",
+      "tags": "fat loss,cardio,strength,calories,body composition"
+    },
+    {
+      "id": 48,
+      "question": "How much protein do I need?",
+      "answer": "Aim for ~1.6–2.2 g/kg of body weight daily, spread across meals. Prioritize lean sources and include protein at breakfast.",
+      "category": "Questions",
+      "tags": "nutrition,protein,macros,muscle,health"
+    },
+    {
+      "id": 49,
+      "question": "What’s an easy way to improve diet quality?",
+      "answer": "Use the plate method: half vegetables, quarter protein, quarter smart carbs, plus healthy fats. Plan 1–2 nutritious staples per meal.",
+      "category": "Questions",
+      "tags": "nutrition,diet quality,plate method,vegetables,habits"
+    },
+    {
+      "id": 50,
+      "question": "How much sleep is ideal for fitness and health?",
+      "answer": "7–9 hours/night for most adults. Keep consistent sleep/wake times, limit late caffeine, and wind down 30–60 minutes before bed.",
+      "category": "Questions",
+      "tags": "sleep,recovery,health,performance,caffeine"
+    },
+    {
+      "id": 51,
+      "question": "How do I stay consistent with workouts?",
+      "answer": "Schedule fixed days/times, keep sessions short (30–45 min), and prepare your gear the night before. Track workouts to see progress.",
+      "category": "Questions",
+      "tags": "consistency,workouts,planning,habits,tracking"
+    },
+    {
+      "id": 52,
+      "question": "What’s a simple warm-up routine?",
+      "answer": "5 minutes light cardio, then dynamic moves for the joints you’ll train (e.g., hip hinges, arm circles, bodyweight squats). Avoid static stretching pre-lift.",
+      "category": "Questions",
+      "tags": "warm-up,dynamic stretching,injury prevention,workout"
+    },
+    {
+      "id": 53,
+      "question": "How can I prevent workout injuries?",
+      "answer": "Progress gradually, use proper form, and listen to early pain signals. Build mobility and take deload weeks every 6–8 weeks.",
+      "category": "Questions",
+      "tags": "injury prevention,form,mobility,deload,progression"
+    },
+    {
+      "id": 54,
+      "question": "Do I need supplements?",
+      "answer": "Food first. Consider protein powder, creatine monohydrate, and vitamin D if deficient; consult a professional before adding others.",
+      "category": "Questions",
+      "tags": "supplements,protein,creatine,vitamin D,nutrition"
+    },
+    {
+      "id": 55,
+      "question": "How do I start strength training at home?",
+      "answer": "Use bodyweight moves (squats, push-ups, rows, hip hinges) 3 days/week. Add bands or dumbbells as you progress.",
+      "category": "Questions",
+      "tags": "strength training,home workout,bodyweight,bands,dumbbells"
+    },
+    {
+      "id": 56,
+      "question": "What’s a balanced weekly training split?",
+      "answer": "2–3 full-body strength days, 1–2 cardio days, and daily walking. Keep 1–2 rest or active recovery days.",
+      "category": "Questions",
+      "tags": "training split,strength,cardio,recovery,walking"
+    },
+    {
+      "id": 57,
+      "question": "How important is hydration?",
+      "answer": "Very. Aim for pale-yellow urine and sip water regularly. Add electrolytes for long or sweaty sessions.",
+      "category": "Questions",
+      "tags": "hydration,water,electrolytes,health,performance"
+    },
+    {
+      "id": 58,
+      "question": "What’s a good post-workout meal?",
+      "answer": "Include protein (20–40g) and carbs to refuel, plus fluids. Whole foods like yogurt + fruit or rice + chicken work well.",
+      "category": "Questions",
+      "tags": "post-workout,nutrition,protein,carbs,recovery"
+    },
+    {
+      "id": 59,
+      "question": "Can I lose fat and gain muscle at the same time?",
+      "answer": "It’s possible for beginners or with higher body fat. Focus on protein, strength training, sleep, and a slight calorie deficit.",
+      "category": "Questions",
+      "tags": "recomposition,fat loss,muscle gain,protein,strength"
+    },
+    {
+      "id": 60,
+      "question": "How do I make healthy eating easier?",
+      "answer": "Meal-prep basics: cook proteins in bulk, pre-chop vegetables, and keep simple staples ready. Default to a few go-to meals.",
+      "category": "Questions",
+      "tags": "meal prep,healthy eating,nutrition,habits,simplicity"
+    },
+    {
+      "id": 61,
+      "question": "What’s NEAT and why does it matter?",
+      "answer": "NEAT is non-exercise activity (walking, chores, fidgeting). It significantly impacts daily calorie burn—stand up and move often.",
+      "category": "Questions",
+      "tags": "NEAT,activity,calories,metabolism,health"
+    },
+    {
+      "id": 62,
+      "question": "How do I manage cravings?",
+      "answer": "Don’t fight them head-on; add protein and fiber at meals, reduce trigger foods in sight, and use 10-minute pause tactics before snacks.",
+      "category": "Questions",
+      "tags": "cravings,nutrition,hunger,fiber,protein"
+    },
+    {
+      "id": 63,
+      "question": "What’s a quick hotel room workout?",
+      "answer": "Circuit 3x: 12 squats, 8–12 push-ups, 12 glute bridges, 20-second plank, 30 seconds fast step-ups or jumping jacks. Rest 60–90 seconds.",
+      "category": "Questions",
+      "tags": "travel,workout,circuit,bodyweight,hotel"
+    },
+    {
+      "id": 64,
+      "question": "How can I keep joints healthy while training?",
+      "answer": "Use full ranges of motion, include mobility drills, and progress loads gradually. If pain persists, deload and consult a professional.",
+      "category": "Questions",
+      "tags": "joints,mobility,injury prevention,range of motion,deload"
+    },
+    {
+      "id": 65,
+      "question": "What’s the simplest way to plan my day?",
+      "answer": "Pick 3 Most Important Tasks (MITs), time-block them on your calendar, and group small admin tasks into a single 30–45 minute block.",
+      "category": "Questions",
+      "tags": "productivity,time management,MITs,time blocking,planning"
+    },
+    {
+      "id": 66,
+      "question": "How does the Pomodoro technique help focus?",
+      "answer": "Work 25 minutes fully focused, then rest 5. After 3–4 cycles, take a longer break. Use it to overcome inertia and reduce burnout.",
+      "category": "Questions",
+      "tags": "pomodoro,focus,deep work,breaks,productivity"
+    },
+    {
+      "id": 67,
+      "question": "How do I prioritize tasks effectively?",
+      "answer": "Use the Eisenhower Matrix: do important-urgent now, schedule important-not-urgent, delegate non-important-urgent, and delete non-important-not-urgent.",
+      "category": "Questions",
+      "tags": "prioritization,Eisenhower,important,urgent,decision making"
+    },
+    {
+      "id": 68,
+      "question": "How can I reduce context switching?",
+      "answer": "Batch similar tasks (email, calls, design), turn off notifications during deep work, and keep one 'in-progress' task at a time.",
+      "category": "Questions",
+      "tags": "context switching,batching,notifications,deep work,focus"
+    },
+    {
+      "id": 69,
+      "question": "What is deep work and how do I start?",
+      "answer": "Deep work is distraction-free focus on cognitively demanding tasks. Book 60–120 minute blocks, clear your desk, and set a specific outcome.",
+      "category": "Questions",
+      "tags": "deep work,focus,distractions,time blocking,environment"
+    },
+    {
+      "id": 70,
+      "question": "How do I handle interruptions at work?",
+      "answer": "Use a visible focus signal, park new requests in a capture list, and schedule quick 'office hours' to batch reactive tasks.",
+      "category": "Questions",
+      "tags": "interruptions,focus,capture list,office hours,batching"
+    },
+    {
+      "id": 71,
+      "question": "What’s a smarter way to manage email?",
+      "answer": "Check in 2–3 windows per day, use filters and templates, archive aggressively, and convert action emails to tasks with due dates.",
+      "category": "Questions",
+      "tags": "email,filters,templates,inbox zero,task management"
+    },
+    {
+      "id": 72,
+      "question": "How can I reduce meeting overload?",
+      "answer": "Create no-meeting blocks, require an agenda with outcomes, end at 25/50 minutes, and replace status meetings with async updates.",
+      "category": "Questions",
+      "tags": "meetings,agenda,no-meeting blocks,async,efficiency"
+    },
+    {
+      "id": 73,
+      "question": "Time blocking vs. to-do lists—which is better?",
+      "answer": "Combine them: plan tasks on a to-do list, then allocate calendar blocks for the highest-impact items. Protect those blocks.",
+      "category": "Questions",
+      "tags": "time blocking,to-do list,planning,priorities,calendar"
+    },
+    {
+      "id": 74,
+      "question": "When should I use checklists vs. projects?",
+      "answer": "Use checklists for recurring processes (QA, publishing). Use projects for multi-step outcomes with a clear done definition and deadline.",
+      "category": "Questions",
+      "tags": "checklists,projects,process,recurring,definition of done"
+    },
+    {
+      "id": 75,
+      "question": "What’s a strong way to start the day?",
+      "answer": "Plan the night before, protect your first deep-work block, and finish one MIT before opening messages.",
+      "category": "Questions",
+      "tags": "morning routine,MITs,deep work,messages,planning"
+    },
+    {
+      "id": 76,
+      "question": "How do I track time to improve productivity?",
+      "answer": "Run a 1–2 week time audit with categories (deep work, meetings, admin). Identify leaks and re-block your calendar accordingly.",
+      "category": "Questions",
+      "tags": "time audit,tracking,calendar,deep work,meetings"
+    },
+    {
+      "id": 77,
+      "question": "How can I overcome perfectionism slowing me down?",
+      "answer": "Define a Minimum Viable Output (MVO), set a time cap, and iterate later. Perfection is a process, not a starting point.",
+      "category": "Questions",
+      "tags": "perfectionism,MVP,iteration,timebox,shipping"
+    },
+    {
+      "id": 78,
+      "question": "How do I prevent my calendar from getting overloaded?",
+      "answer": "Apply the 60% rule (leave buffer), batch meetings, and include transition time. Decline or delegate low-value invites.",
+      "category": "Questions",
+      "tags": "calendar,buffer,transition time,delegation,meetings"
+    },
+    {
+      "id": 79,
+      "question": "What’s a reliable capture system?",
+      "answer": "Use a single trusted inbox (notes app or task manager), capture everything quickly, and process to projects or next actions daily.",
+      "category": "Questions",
+      "tags": "GTD,capture,inbox,task manager,next actions"
+    },
+    {
+      "id": 80,
+      "question": "What should a weekly review include?",
+      "answer": "Clear inboxes, review projects, plan next week’s MITs, and block deep-work sessions. Celebrate wins and adjust priorities.",
+      "category": "Questions",
+      "tags": "weekly review,GTD,planning,projects,priorities"
+    },
+    {
+      "id": 81,
+      "question": "How do I manage deadlines without last-minute rushes?",
+      "answer": "Work backward from the due date, set interim milestones, and front-load risk. Send progress updates before anyone asks.",
+      "category": "Questions",
+      "tags": "deadlines,planning,milestones,risk management,updates"
+    },
+    {
+      "id": 82,
+      "question": "How can I estimate task durations better?",
+      "answer": "Use reference class forecasting (past similar tasks), double your initial guess, and add a 20–50% buffer for uncertainty.",
+      "category": "Questions",
+      "tags": "estimation,forecasting,buffers,planning,uncertainty"
+    },
+    {
+      "id": 83,
+      "question": "How do I align work with my energy levels?",
+      "answer": "Schedule creative or analytical work during your peak hours and place admin tasks during lows. Protect peaks with focus blocks.",
+      "category": "Questions",
+      "tags": "energy management,chronotype,focus blocks,creative work,admin"
+    },
+    {
+      "id": 84,
+      "question": "What tools should I use without overcomplicating?",
+      "answer": "Pick one task manager, one calendar, and one notes app—sync across devices. Simplicity and consistency beat tool-hopping.",
+      "category": "Questions",
+      "tags": "tools,task manager,calendar,notes,simplicity"
+    },
+    {
+      "id": 85,
+      "question": "How do I start a habit that actually sticks?",
+      "answer": "Make it tiny (2 minutes), tie it to a reliable cue, and track a weekly streak. Focus on identity: ‘I’m the kind of person who…’.",
+      "category": "Questions",
+      "tags": "habits,discipline,tiny habits,identity,streaks"
+    },
+    {
+      "id": 86,
+      "question": "What is the 2-minute rule?",
+      "answer": "Shrink the first step to under 2 minutes so starting is easy. Starting often creates momentum to continue.",
+      "category": "Questions",
+      "tags": "2-minute rule,activation energy,start,habits,friction"
+    },
+    {
+      "id": 87,
+      "question": "How does habit stacking work?",
+      "answer": "Attach a new behavior to an existing habit: ‘After I [current habit], I will [new tiny action]’. The cue triggers the routine.",
+      "category": "Questions",
+      "tags": "habit stacking,cues,routine,anchor,consistency"
+    },
+    {
+      "id": 88,
+      "question": "How do I design my environment for discipline?",
+      "answer": "Make good habits obvious and easy (lay gear out), and bad habits invisible and hard (remove triggers, add friction).",
+      "category": "Questions",
+      "tags": "environment,friction,discipline,cues,design"
+    },
+    {
+      "id": 89,
+      "question": "What are keystone habits?",
+      "answer": "High-leverage behaviors that create cascading benefits (sleep, exercise, planning). Start with 1–2 to maximize momentum.",
+      "category": "Questions",
+      "tags": "keystone habits,leverage,compounding,discipline,focus"
+    },
+    {
+      "id": 90,
+      "question": "How do I recover after missing a day?",
+      "answer": "Never miss twice. Schedule the next session immediately and return to your minimum viable version to rebuild momentum.",
+      "category": "Questions",
+      "tags": "consistency,recovery,never miss twice,discipline,baseline"
+    },
+    {
+      "id": 91,
+      "question": "How do I break a bad habit?",
+      "answer": "Identify the trigger, replace the routine, change the environment, and increase friction. Pair with an alternative reward.",
+      "category": "Questions",
+      "tags": "bad habits,triggers,replacement,friction,reward"
+    },
+    {
+      "id": 92,
+      "question": "Motivation vs discipline—what’s the difference?",
+      "answer": "Motivation is a feeling; discipline is a system. Rely on cues, schedules, and checklists—feelings are optional.",
+      "category": "Questions",
+      "tags": "motivation,discipline,systems,cues,schedules"
+    },
+    {
+      "id": 93,
+      "question": "What is an implementation intention?",
+      "answer": "An if–then plan: ‘If [cue], then I will [action]’. It boosts follow-through by pre-deciding your response.",
+      "category": "Questions",
+      "tags": "implementation intentions,if-then,planning,follow-through,habits"
+    },
+    {
+      "id": 94,
+      "question": "How do commitment devices help?",
+      "answer": "Add stakes or constraints (lock apps, public commitments, deposits) to make the desired action easier than the alternative.",
+      "category": "Questions",
+      "tags": "commitment device,precommitment,friction,accountability,discipline"
+    },
+    {
+      "id": 95,
+      "question": "What’s the best way to track habits?",
+      "answer": "Use a simple checklist or calendar chain. Review weekly, not perfectly daily, to focus on trends over perfection.",
+      "category": "Questions",
+      "tags": "habit tracking,checklist,streak,weekly review,metrics"
+    },
+    {
+      "id": 96,
+      "question": "How big should habit increments be?",
+      "answer": "Increase by 5–10% per week and deload every 4–6 weeks. Keep jumps small to avoid burnout and injury.",
+      "category": "Questions",
+      "tags": "progression,increments,deload,habits,overload"
+    },
+    {
+      "id": 97,
+      "question": "How do I keep habits on weekends or travel?",
+      "answer": "Create a travel variant (short, equipment-free). Keep the streak alive with a minimum viable version.",
+      "category": "Questions",
+      "tags": "travel,variants,minimum viable,consistency,habits"
+    },
+    {
+      "id": 98,
+      "question": "How long does it take to form a habit?",
+      "answer": "Commonly 4–12 weeks. Focus on reps and cues, not a fixed number of days. Consistency builds automaticity.",
+      "category": "Questions",
+      "tags": "habit formation,reps,consistency,timeframe,discipline"
+    },
+    {
+      "id": 99,
+      "question": "Morning vs evening habits—what’s better?",
+      "answer": "Choose the time that matches your energy and context. The consistent cue matters more than the clock.",
+      "category": "Questions",
+      "tags": "timing,morning,evening,energy,cues"
+    },
+    {
+      "id": 100,
+      "question": "How can I avoid decision fatigue?",
+      "answer": "Decide once: pre-plan menus, outfit, or workout. Use checklists and templates to reduce daily choices.",
+      "category": "Questions",
+      "tags": "decision fatigue,automation,routines,templates,discipline"
+    },
+    {
+      "id": 101,
+      "question": "What’s temptation bundling?",
+      "answer": "Pair a habit you need with something you enjoy (podcast while walking). It boosts motivation without willpower.",
+      "category": "Questions",
+      "tags": "temptation bundling,reward,habit formation,motivation,discipline"
+    },
+    {
+      "id": 102,
+      "question": "How do I set realistic habit goals?",
+      "answer": "Define a nonzero minimum and a clear ‘done’ definition. Raise the ceiling after 2–3 easy weeks.",
+      "category": "Questions",
+      "tags": "goals,minimum viable,definition of done,habits,clarity"
+    },
+    {
+      "id": 103,
+      "question": "How do rewards affect habits?",
+      "answer": "Immediate, small, and intrinsic rewards reinforce behavior. Track progress where you can see it.",
+      "category": "Questions",
+      "tags": "rewards,reinforcement,intrinsic,immediate,habits"
+    },
+    {
+      "id": 104,
+      "question": "How do I sustain discipline when stressed?",
+      "answer": "Shrink to minimums, protect sleep, and schedule recovery. Keep systems simple and visible.",
+      "category": "Questions",
+      "tags": "stress,minimums,consistency,sleep,discipline"
+    },
+    {
+      "id": 105,
+      "question": "How can I build daily self-awareness?",
+      "answer": "Do a 2-minute check-in: What am I feeling? Why? What do I need? Name it to tame it.",
+      "category": "Questions",
+      "tags": "self-awareness,check-in,emotions,reflection,needs"
+    },
+    {
+      "id": 106,
+      "question": "What is emotional labeling?",
+      "answer": "Putting feelings into words reduces intensity and improves control. Use specific emotion words.",
+      "category": "Questions",
+      "tags": "labeling,affect labeling,emotions,regulation,awareness"
+    },
+    {
+      "id": 107,
+      "question": "How do I pause before reacting?",
+      "answer": "Use a 4-7-8 breath or count to ten. The 90-second rule lets emotional chemicals settle before you respond.",
+      "category": "Questions",
+      "tags": "pause,response,breathe,regulation,control"
+    },
+    {
+      "id": 108,
+      "question": "How do I reframe unhelpful thoughts?",
+      "answer": "Practice cognitive reappraisal: find alternative interpretations and focus on controllables and next steps.",
+      "category": "Questions",
+      "tags": "reappraisal,cognition,reframe,controllables,EQ"
+    },
+    {
+      "id": 109,
+      "question": "How do I listen actively?",
+      "answer": "Paraphrase what you heard, ask open questions, and resist the urge to fix. Aim to understand first.",
+      "category": "Questions",
+      "tags": "active listening,paraphrase,questions,empathy,EQ"
+    },
+    {
+      "id": 110,
+      "question": "How can I build empathy?",
+      "answer": "Use perspective-taking and curiosity. Ask, ‘What matters most to you right now?’ and reflect feelings back.",
+      "category": "Questions",
+      "tags": "empathy,perspective-taking,curiosity,EQ,connection"
+    },
+    {
+      "id": 111,
+      "question": "What framework helps with hard conversations?",
+      "answer": "Try Nonviolent Communication: observations, feelings, needs, and clear requests.",
+      "category": "Questions",
+      "tags": "NVC,conflict,communication,requests,feelings"
+    },
+    {
+      "id": 112,
+      "question": "How do I give feedback well?",
+      "answer": "Use SBI: Situation, Behavior, Impact. Ask permission, be specific, and suggest next steps.",
+      "category": "Questions",
+      "tags": "feedback,SBI,communication,coaching,EQ"
+    },
+    {
+      "id": 113,
+      "question": "How do I receive feedback gracefully?",
+      "answer": "Listen fully, ask clarifying questions, thank them, and choose one change to apply. Separate intent from impact.",
+      "category": "Questions",
+      "tags": "feedback,receiving,growth,mindset,EQ"
+    },
+    {
+      "id": 114,
+      "question": "How do I map emotional triggers?",
+      "answer": "Keep a trigger journal: note situation, thought, feeling, action. Spot patterns and plan if–then responses.",
+      "category": "Questions",
+      "tags": "triggers,journal,patterns,if-then,regulation"
+    },
+    {
+      "id": 115,
+      "question": "What are healthy boundaries?",
+      "answer": "Clear limits that protect your energy and values. Say no early, explain briefly, and offer alternatives when possible.",
+      "category": "Questions",
+      "tags": "boundaries,assertiveness,limits,EQ,communication"
+    },
+    {
+      "id": 116,
+      "question": "How do I apologize effectively?",
+      "answer": "Acknowledge impact, take responsibility without excuses, and make a specific repair or next step.",
+      "category": "Questions",
+      "tags": "apology,repair,accountability,impact,EQ"
+    },
+    {
+      "id": 117,
+      "question": "What are quick ways to regulate stress?",
+      "answer": "Slow breathing, progressive muscle relaxation, and a short walk. Pair with a calming reframe.",
+      "category": "Questions",
+      "tags": "stress,regulation,breathing,PMR,EQ"
+    },
+    {
+      "id": 118,
+      "question": "What is emotional granularity?",
+      "answer": "Using specific emotion words (irritated vs angry). Greater granularity improves regulation and communication.",
+      "category": "Questions",
+      "tags": "granularity,vocabulary,emotions,awareness,EQ"
+    },
+    {
+      "id": 119,
+      "question": "How do I handle criticism constructively?",
+      "answer": "Extract the signal from the tone, ask for examples, and set boundaries if it turns abusive. Decide one improvement.",
+      "category": "Questions",
+      "tags": "criticism,signal,tone,examples,boundaries"
+    },
+    {
+      "id": 120,
+      "question": "How can I cultivate gratitude?",
+      "answer": "Write three good things daily and note who to thank. Gratitude broadens attention and buffers stress.",
+      "category": "Questions",
+      "tags": "gratitude,journaling,positivity,EQ,wellbeing"
+    },
+    {
+      "id": 121,
+      "question": "How do I manage conflict at work?",
+      "answer": "Define the problem, surface interests, brainstorm options, and agree on a small next step. Follow up.",
+      "category": "Questions",
+      "tags": "conflict,interests,options,agreement,work"
+    },
+    {
+      "id": 122,
+      "question": "How do I build social awareness?",
+      "answer": "Watch body language, tone, and context. Check assumptions and ask clarifying questions.",
+      "category": "Questions",
+      "tags": "social awareness,nonverbal,cues,context,EQ"
+    },
+    {
+      "id": 123,
+      "question": "How can I self-soothe in the moment?",
+      "answer": "Breathe slowly, use 5-4-3-2-1 grounding, and label feelings. Shift posture to signal safety.",
+      "category": "Questions",
+      "tags": "self-soothing,grounding,breathing,labeling,EQ"
+    },
+    {
+      "id": 124,
+      "question": "How do I de-escalate tense situations?",
+      "answer": "Lower your voice, validate the other person’s feelings, and propose a small, concrete next step.",
+      "category": "Questions",
+      "tags": "de-escalation,validation,calm,next step,EQ"
+    }
+  ]
+}
