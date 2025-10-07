@@ -8,7 +8,7 @@ import { useAuth } from "@/react-app/hooks/useCustomAuth";
 // Types
 type ProjectStatus = "upcoming" | "ongoing" | "completed" | "archived";
 
-type Project = {
+interface Project {
   id: number;
   user_id: string;
   title: string;
@@ -19,15 +19,15 @@ type Project = {
   priority: 1 | 2 | 3;
   created_at: string;
   updated_at: string;
-};
+}
 
-type ProjectNote = {
+interface ProjectNote {
   id: number;
   user_id: string;
   project_id: number;
   note_text: string;
   created_at: string;
-};
+}
 
 const statusOptions: ProjectStatus[] = [
   "upcoming",
@@ -36,24 +36,33 @@ const statusOptions: ProjectStatus[] = [
   "archived",
 ];
 
-const priorityOptions: Array<{ value: 1 | 2 | 3; label: string }> = [
+const priorityOptions: { value: 1 | 2 | 3; label: string }[] = [
   { value: 1, label: "High" },
   { value: 2, label: "Medium" },
   { value: 3, label: "Low" },
 ];
 
-function clsx(...classes: Array<string | false | undefined | null>) {
+interface CreateProjectPayload {
+  title: string;
+  description: string | null;
+  status: ProjectStatus;
+  priority: 1 | 2 | 3;
+  tech_stack: string[];
+  deadline?: string;
+}
+
+function clsx(...classes: (string | false | undefined | null)[]): string {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ProjectsPage() {
+export default function ProjectsPage(): React.ReactElement {
   const { user, isLoading } = useAuth();
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<ProjectStatus | "all">(
-    "all"
+    "all",
   );
 
   const [showCreate, setShowCreate] = useState(false);
@@ -68,7 +77,7 @@ export default function ProjectsPage() {
   });
 
   const [expandedProjectId, setExpandedProjectId] = useState<number | null>(
-    null
+    null,
   );
   const [notesByProject, setNotesByProject] = useState<
     Record<number, ProjectNote[]>
@@ -78,12 +87,17 @@ export default function ProjectsPage() {
 
   // UX: search and sorting controls
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<"priority" | "deadline" | "created_at" | "title">("priority");
+  const [sortBy, setSortBy] = useState<
+    "priority" | "deadline" | "created_at" | "title"
+  >("priority");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
-  const visibleProjects = useMemo(() => {
+  const visibleProjects = useMemo((): Project[] => {
     // filter by status (server already filters, but keep client safety)
-    let list = filterStatus === "all" ? projects : projects.filter((p) => p.status === filterStatus);
+    let list =
+      filterStatus === "all"
+        ? projects
+        : projects.filter((p) => p.status === filterStatus);
 
     // search filter
     const q = search.trim().toLowerCase();
@@ -91,7 +105,7 @@ export default function ProjectsPage() {
       list = list.filter((p) => {
         const hay = [
           p.title,
-          p.description || "",
+          p.description ?? "",
           Array.isArray(p.tech_stack) ? p.tech_stack.join(", ") : "",
         ]
           .join("\n")
@@ -111,7 +125,10 @@ export default function ProjectsPage() {
           bv = b.priority;
           break;
         case "deadline": {
-          const noDeadlineRank = sortDir === "asc" ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+          const noDeadlineRank =
+            sortDir === "asc"
+              ? Number.POSITIVE_INFINITY
+              : Number.NEGATIVE_INFINITY;
           const ad = a.deadline ? Date.parse(a.deadline) : noDeadlineRank;
           const bd = b.deadline ? Date.parse(b.deadline) : noDeadlineRank;
           av = ad;
@@ -136,7 +153,7 @@ export default function ProjectsPage() {
     return sorted;
   }, [projects, filterStatus, search, sortBy, sortDir]);
 
-  useEffect(() => {
+  useEffect((): void => {
     if (!user) {
       setProjects([]);
       setError(null);
@@ -146,7 +163,7 @@ export default function ProjectsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, filterStatus]);
 
-  async function loadProjects() {
+  async function loadProjects(): Promise<void> {
     if (!user) return;
     setLoading(true);
     setError(null);
@@ -158,11 +175,24 @@ export default function ProjectsPage() {
         setProjects([]);
         return;
       }
-      if (!res.ok) throw new Error((await res.json()).error || "Failed");
-      const json = await res.json();
-      setProjects(json.projects || []);
-    } catch (e: any) {
-      setError(e?.message || "Failed to load projects");
+      const data: unknown = await res.json();
+      if (!res.ok) {
+        let msg: string | undefined;
+        if (data && typeof data === "object" && "error" in data) {
+          const e = (data as { error?: unknown }).error;
+          if (typeof e === "string") msg = e;
+        }
+        throw new Error(msg ?? "Failed");
+      }
+      const projects =
+        data && typeof data === "object" && "projects" in data &&
+        Array.isArray((data as { projects?: unknown }).projects)
+          ? ((data as { projects: Project[] }).projects)
+          : [];
+      setProjects(projects);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Failed to load projects";
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -175,7 +205,7 @@ export default function ProjectsPage() {
       .filter((s) => s.length > 0);
   }
 
-  async function createProject(e: React.FormEvent) {
+  async function createProject(e: React.FormEvent): Promise<void> {
     e.preventDefault();
     if (!user) {
       toast.error("Please log in to create a project.");
@@ -187,9 +217,9 @@ export default function ProjectsPage() {
     }
     setCreating(true);
     try {
-      const payload: any = {
+      const payload: CreateProjectPayload = {
         title: form.title.trim(),
-        description: form.description.trim() || null,
+        description: form.description.trim() ? form.description.trim() : null,
         status: form.status,
         priority: form.priority,
         tech_stack: parseTechStack(form.techStackInput),
@@ -201,8 +231,13 @@ export default function ProjectsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Failed to create project");
+      const data: unknown = await res.json();
+      let errMsg: string | undefined;
+      if (data && typeof data === "object" && "error" in data) {
+        const e = (data as { error?: unknown }).error;
+        if (typeof e === "string") errMsg = e;
+      }
+      if (!res.ok) throw new Error(errMsg ?? "Failed to create project");
       toast.success("Project created");
       setShowCreate(false);
       setForm({
@@ -214,96 +249,146 @@ export default function ProjectsPage() {
         techStackInput: "",
       });
       await loadProjects();
-    } catch (e: any) {
-      toast.error(e?.message || "Failed to create project");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Failed to create project";
+      toast.error(msg);
     } finally {
       setCreating(false);
     }
   }
 
-  async function updateProject(id: number, updates: Partial<Project>) {
+  async function updateProject(id: number, updates: Partial<Project>): Promise<void> {
     if (!user) {
       toast.error("Please log in to update a project.");
       return;
     }
     try {
-      const res = await fetch(`/api/projects/${id}`, {
+      const res = await fetch(`/api/projects/${String(id)}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updates),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Failed to update project");
+      const data: unknown = await res.json();
+      let errMsg: string | undefined;
+      if (data && typeof data === "object" && "error" in data) {
+        const e = (data as { error?: unknown }).error;
+        if (typeof e === "string") errMsg = e;
+      }
+      if (!res.ok) throw new Error(errMsg ?? "Failed to update project");
       toast.success("Saved");
-      setProjects((prev) => prev.map((p) => (p.id === id ? json.project : p)));
-    } catch (e: any) {
-      toast.error(e?.message || "Failed to update project");
+      const updated =
+        data && typeof data === "object" && "project" in data
+          ? (data as { project?: Project }).project
+          : undefined;
+      if (updated) {
+        setProjects((prev) => prev.map((p) => (p.id === id ? updated : p)));
+      }
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Failed to update project";
+      toast.error(msg);
     }
   }
 
-  async function deleteProject(id: number) {
+  async function deleteProject(id: number): Promise<void> {
     if (!user) {
       toast.error("Please log in to delete a project.");
       return;
     }
     if (!confirm("Delete this project?")) return;
     try {
-      const res = await fetch(`/api/projects/${id}`, { method: "DELETE" });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(json.error || "Failed to delete project");
+      const res = await fetch(`/api/projects/${String(id)}`, { method: "DELETE" });
+      let data: unknown = null;
+      try {
+        data = await res.json();
+      } catch {
+        /* ignore parse errors */
+      }
+      let errMsg: string | undefined;
+      if (data && typeof data === "object" && "error" in data) {
+        const e = (data as { error?: unknown }).error;
+        if (typeof e === "string") errMsg = e;
+      }
+      if (!res.ok) throw new Error(errMsg ?? "Failed to delete project");
       toast.success("Deleted");
       setProjects((prev) => prev.filter((p) => p.id !== id));
       if (expandedProjectId === id) setExpandedProjectId(null);
-    } catch (e: any) {
-      toast.error(e?.message || "Failed to delete project");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Failed to delete project";
+      toast.error(msg);
     }
   }
 
-  async function loadNotes(projectId: number) {
+  async function loadNotes(projectId: number): Promise<void> {
     if (!user) return;
     setNotesLoading((s) => ({ ...s, [projectId]: true }));
     try {
-      const res = await fetch(`/api/projects/${projectId}/notes`, {
+      const res = await fetch(`/api/projects/${String(projectId)}/notes`, {
         cache: "no-store",
       });
-      if (!res.ok) throw new Error((await res.json()).error || "Failed");
-      const json = await res.json();
-      setNotesByProject((prev) => ({ ...prev, [projectId]: json.notes || [] }));
-    } catch (e: any) {
-      toast.error(e?.message || "Failed to load notes");
+      const data: unknown = await res.json();
+      if (!res.ok) {
+        let msg: string | undefined;
+        if (data && typeof data === "object" && "error" in data) {
+          const e = (data as { error?: unknown }).error;
+          if (typeof e === "string") msg = e;
+        }
+        throw new Error(msg ?? "Failed");
+      }
+      const notes =
+        data && typeof data === "object" && "notes" in data &&
+        Array.isArray((data as { notes?: unknown }).notes)
+          ? ((data as { notes: ProjectNote[] }).notes)
+          : [];
+      setNotesByProject((prev) => ({ ...prev, [projectId]: notes }));
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Failed to load notes";
+      toast.error(msg);
     } finally {
       setNotesLoading((s) => ({ ...s, [projectId]: false }));
     }
   }
 
-  async function addNote(projectId: number) {
+  async function addNote(projectId: number): Promise<void> {
     if (!user) {
       toast.error("Please log in to add notes.");
       return;
     }
-    const text = (newNoteText[projectId] || "").trim();
+    const text = (newNoteText[projectId] ?? "").trim();
     if (!text) return;
     try {
-      const res = await fetch(`/api/projects/${projectId}/notes`, {
+      const res = await fetch(`/api/projects/${String(projectId)}/notes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ note_text: text }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Failed to add note");
+      const data: unknown = await res.json();
+      let errMsg: string | undefined;
+      if (data && typeof data === "object" && "error" in data) {
+        const e = (data as { error?: unknown }).error;
+        if (typeof e === "string") errMsg = e;
+      }
+      if (!res.ok) throw new Error(errMsg ?? "Failed to add note");
+      const note =
+        data && typeof data === "object" && "note" in data
+          ? (data as { note?: ProjectNote }).note
+          : undefined;
       setNewNoteText((s) => ({ ...s, [projectId]: "" }));
-      setNotesByProject((prev) => ({
-        ...prev,
-        [projectId]: [json.note, ...(prev[projectId] || [])],
-      }));
+      if (note) {
+        setNotesByProject((prev) => ({
+          ...prev,
+          [projectId]: [note, ...(prev[projectId] ?? [])],
+        }));
+      }
       toast.success("Note added");
-    } catch (e: any) {
-      toast.error(e?.message || "Failed to add note");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Failed to add note";
+      toast.error(msg);
     }
   }
 
-  function PriorityBadge({ value }: { value: 1 | 2 | 3 }) {
-    const label = priorityOptions.find((p) => p.value === value)?.label || value;
+  function PriorityBadge({ value }: { value: 1 | 2 | 3 }): React.ReactElement {
+    const label =
+      priorityOptions.find((p) => p.value === value)?.label ?? value;
     const color = value === 1 ? "red" : value === 2 ? "yellow" : "blue";
     return (
       <span
@@ -311,9 +396,9 @@ export default function ProjectsPage() {
           "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium",
           color === "red" && "bg-red-500/20 text-red-200",
           color === "yellow" && "bg-yellow-500/20 text-yellow-100",
-          color === "blue" && "bg-blue-500/20 text-blue-100"
+          color === "blue" && "bg-blue-500/20 text-blue-100",
         )}
-        title={`Priority: ${label}`}
+        title={`Priority: ${String(label)}`}
       >
         {label}
       </span>
@@ -321,7 +406,7 @@ export default function ProjectsPage() {
   }
 
   // Loading skeleton for better UX
-  function SkeletonCard() {
+  function SkeletonCard(): React.ReactElement {
     return (
       <div className="animate-pulse bg-white/5 border border-white/10 rounded-lg p-4 space-y-3">
         <div className="h-5 bg-white/10 rounded w-2/3" />
@@ -337,7 +422,7 @@ export default function ProjectsPage() {
     );
   }
 
-  function StatusBadge({ value }: { value: ProjectStatus }) {
+  function StatusBadge({ value }: { value: ProjectStatus }): React.ReactElement {
     const colorMap: Record<ProjectStatus, string> = {
       upcoming: "bg-slate-500/20 text-slate-100",
       ongoing: "bg-indigo-500/20 text-indigo-100",
@@ -345,35 +430,41 @@ export default function ProjectsPage() {
       archived: "bg-zinc-500/20 text-zinc-100",
     };
     return (
-      <span className={clsx("inline-flex rounded-md px-2 py-0.5 text-xs", colorMap[value])}>
+      <span
+        className={clsx(
+          "inline-flex rounded-md px-2 py-0.5 text-xs",
+          colorMap[value],
+        )}
+      >
         {value}
       </span>
     );
   }
 
-  function ProjectCard({ project }: { project: Project }) {
+  function ProjectCard({ project }: { project: Project }): React.ReactElement {
     const [editing, setEditing] = useState(false);
     const [edit, setEdit] = useState({
       title: project.title,
-      description: project.description || "",
-      status: project.status as ProjectStatus,
+      description: project.description ?? "",
+      status: project.status,
       deadline: project.deadline ? project.deadline.slice(0, 10) : "",
-      priority: project.priority as 1 | 2 | 3,
-      techStackInput: (project.tech_stack || []).join(", "),
+      priority: project.priority,
+      techStackInput: project.tech_stack.join(", "),
     });
 
     useEffect(() => {
       setEdit({
         title: project.title,
-        description: project.description || "",
+        description: project.description ?? "",
         status: project.status,
         deadline: project.deadline ? project.deadline.slice(0, 10) : "",
         priority: project.priority,
-        techStackInput: (project.tech_stack || []).join(", "),
+        techStackInput: project.tech_stack.join(", "),
       });
     }, [project]);
 
     const isExpanded = expandedProjectId === project.id;
+    const notes = notesByProject[project.id] ?? [];
 
     return (
       <div className="bg-white/5 border border-white/10 rounded-lg p-4 flex flex-col gap-3">
@@ -384,7 +475,9 @@ export default function ProjectsPage() {
                 className="w-full bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white placeholder-purple-200/70"
                 placeholder="Project title"
                 value={edit.title}
-                onChange={(e) => setEdit((s) => ({ ...s, title: e.target.value }))}
+                onChange={(e) => {
+                  setEdit((s) => ({ ...s, title: e.target.value }));
+                }}
                 autoFocus
                 aria-label="Project title"
               />
@@ -395,10 +488,16 @@ export default function ProjectsPage() {
             )}
             <div className="mt-2 flex items-center gap-2 flex-wrap">
               <StatusBadge value={editing ? edit.status : project.status} />
-              <PriorityBadge value={editing ? edit.priority : project.priority} />
+              <PriorityBadge
+                value={editing ? edit.priority : project.priority}
+              />
               {(editing ? edit.deadline : project.deadline) && (
                 <span className="text-xs text-purple-200">
-                  Due {format(parseISO((editing ? edit.deadline : project.deadline)!), "MMM d, yyyy")}
+                  Due{" "}
+                  {format(
+                    parseISO((editing ? edit.deadline : project.deadline)!),
+                    "MMM d, yyyy",
+                  )}
                 </span>
               )}
             </div>
@@ -414,19 +513,25 @@ export default function ProjectsPage() {
                     }
                     void updateProject(project.id, {
                       title: edit.title.trim(),
-                      description: edit.description.trim() || null,
+                      description: edit.description.trim()
+                        ? edit.description.trim()
+                        : null,
                       status: edit.status,
-                      deadline: edit.deadline || null,
+                      deadline: edit.deadline.length > 0 ? edit.deadline : null,
                       priority: edit.priority,
                       tech_stack: parseTechStack(edit.techStackInput),
-                    }).then(() => setEditing(false));
+                    }).then(() => {
+                      setEditing(false);
+                    });
                   }}
                   className="px-3 py-1.5 rounded-md bg-emerald-500/20 text-emerald-100 hover:bg-emerald-500/30 text-sm"
                 >
                   Save
                 </button>
                 <button
-                  onClick={() => setEditing(false)}
+                  onClick={() => {
+                    setEditing(false);
+                  }}
                   className="px-3 py-1.5 rounded-md bg-white/10 text-white hover:bg-white/20 text-sm"
                 >
                   Cancel
@@ -435,13 +540,17 @@ export default function ProjectsPage() {
             ) : (
               <>
                 <button
-                  onClick={() => setEditing(true)}
+                  onClick={() => {
+                    setEditing(true);
+                  }}
                   className="px-3 py-1.5 rounded-md bg-white/10 text-white hover:bg-white/20 text-sm"
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => void deleteProject(project.id)}
+                  onClick={() => {
+                    void deleteProject(project.id);
+                  }}
                   className="px-3 py-1.5 rounded-md bg-red-500/20 text-red-100 hover:bg-red-500/30 text-sm"
                 >
                   Delete
@@ -457,11 +566,13 @@ export default function ProjectsPage() {
               className="w-full bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white placeholder-purple-200/70 min-h-[72px]"
               placeholder="Description (optional)"
               value={edit.description}
-              onChange={(e) => setEdit((s) => ({ ...s, description: e.target.value }))}
+              onChange={(e) => {
+                setEdit((s) => ({ ...s, description: e.target.value }));
+              }}
             />
           ) : (
             <p className="text-purple-100/80 whitespace-pre-wrap">
-              {project.description || "No description"}
+              {project.description?.trim() ? project.description : "No description"}
             </p>
           )}
         </div>
@@ -472,9 +583,12 @@ export default function ProjectsPage() {
               <select
                 className="bg-white/10 border border-white/20 rounded-md px-2 py-1 text-white text-sm"
                 value={edit.status}
-                onChange={(e) =>
-                  setEdit((s) => ({ ...s, status: e.target.value as ProjectStatus }))
-                }
+                onChange={(e) => {
+                  setEdit((s) => ({
+                    ...s,
+                    status: e.target.value as ProjectStatus,
+                  }));
+                }}
               >
                 {statusOptions.map((s) => (
                   <option key={s} value={s}>
@@ -485,9 +599,12 @@ export default function ProjectsPage() {
               <select
                 className="bg-white/10 border border-white/20 rounded-md px-2 py-1 text-white text-sm"
                 value={edit.priority}
-                onChange={(e) =>
-                  setEdit((s) => ({ ...s, priority: Number(e.target.value) as 1 | 2 | 3 }))
-                }
+                onChange={(e) => {
+                  setEdit((s) => ({
+                    ...s,
+                    priority: Number(e.target.value) as 1 | 2 | 3,
+                  }));
+                }}
               >
                 {priorityOptions.map((p) => (
                   <option key={p.value} value={p.value}>
@@ -499,23 +616,25 @@ export default function ProjectsPage() {
                 type="date"
                 className="bg-white/10 border border-white/20 rounded-md px-2 py-1 text-white text-sm"
                 value={edit.deadline}
-                onChange={(e) => setEdit((s) => ({ ...s, deadline: e.target.value }))}
+                onChange={(e) => {
+                  setEdit((s) => ({ ...s, deadline: e.target.value }));
+                }}
               />
               <input
                 className="flex-1 min-w-[220px] bg-white/10 border border-white/20 rounded-md px-3 py-1.5 text-white placeholder-purple-200/70 text-sm"
                 placeholder="Tech stack (comma separated)"
                 value={edit.techStackInput}
-                onChange={(e) =>
-                  setEdit((s) => ({ ...s, techStackInput: e.target.value }))
-                }
+                onChange={(e) => {
+                  setEdit((s) => ({ ...s, techStackInput: e.target.value }));
+                }}
               />
             </>
           ) : (
             <div className="flex items-center gap-2 flex-wrap">
-              {(project.tech_stack || []).length > 0 ? (
+              {project.tech_stack.length > 0 ? (
                 project.tech_stack.map((t, i) => (
                   <span
-                    key={`${t}-${i}`}
+                    key={[t, i].join("-")}
                     className="inline-flex items-center rounded-md bg-white/10 px-2 py-0.5 text-xs text-white"
                   >
                     {t}
@@ -533,9 +652,12 @@ export default function ProjectsPage() {
           <button
             className="text-sm text-purple-200 hover:text-white underline"
             onClick={() => {
-              const willExpand = isExpanded ? null : project.id;
-              setExpandedProjectId(willExpand);
-              if (willExpand && !notesByProject[project.id]) {
+              const willExpand = !isExpanded;
+              setExpandedProjectId(willExpand ? project.id : null);
+              if (
+                willExpand &&
+                !Object.prototype.hasOwnProperty.call(notesByProject, project.id)
+              ) {
                 void loadNotes(project.id);
               }
             }}
@@ -549,10 +671,13 @@ export default function ProjectsPage() {
                 <input
                   className="flex-1 bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white placeholder-purple-200/70 text-sm"
                   placeholder="Add a note"
-                  value={newNoteText[project.id] || ""}
-                  onChange={(e) =>
-                    setNewNoteText((s) => ({ ...s, [project.id]: e.target.value }))
-                  }
+                  value={newNoteText[project.id] ?? ""}
+                  onChange={(e) => {
+                    setNewNoteText((s) => ({
+                      ...s,
+                      [project.id]: e.target.value,
+                    }));
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
@@ -563,7 +688,9 @@ export default function ProjectsPage() {
                   aria-label="Add a note"
                 />
                 <button
-                  onClick={() => void addNote(project.id)}
+                  onClick={() => {
+                    void addNote(project.id);
+                  }}
                   className="px-3 py-2 rounded-md bg-white/10 text-white hover:bg-white/20 text-sm"
                   disabled={notesLoading[project.id]}
                 >
@@ -572,10 +699,10 @@ export default function ProjectsPage() {
               </div>
 
               <div className="space-y-2">
-                {(notesByProject[project.id] || []).length === 0 ? (
+                {notes.length === 0 ? (
                   <p className="text-sm text-purple-200">No notes yet</p>
                 ) : (
-                  (notesByProject[project.id] || []).map((n) => (
+                  notes.map((n) => (
                     <div
                       key={n.id}
                       className="bg-white/5 border border-white/10 rounded-md px-3 py-2"
@@ -625,7 +752,9 @@ export default function ProjectsPage() {
             className="flex-1 min-w-[220px] bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white placeholder-purple-200/70 text-sm"
             placeholder="Search projects, description, tech stack"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
             aria-label="Search projects"
           />
 
@@ -634,7 +763,10 @@ export default function ProjectsPage() {
           <select
             className="bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white text-sm"
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value as any)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              const v = e.target.value as ProjectStatus | "all";
+              setFilterStatus(v);
+            }}
             disabled={!user}
             aria-label="Filter by status"
           >
@@ -651,7 +783,15 @@ export default function ProjectsPage() {
           <select
             className="bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white text-sm"
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setSortBy(
+                e.target.value as
+                  | "priority"
+                  | "deadline"
+                  | "created_at"
+                  | "title",
+              );
+            }}
             aria-label="Sort by"
           >
             <option value="priority">Priority</option>
@@ -661,7 +801,9 @@ export default function ProjectsPage() {
           </select>
           <button
             type="button"
-            onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+            onClick={() => {
+              setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+            }}
             className="px-3 py-2 rounded-md bg-white/10 text-white hover:bg-white/20 text-sm"
             title={`Sort ${sortDir === "asc" ? "ascending" : "descending"}`}
             aria-label="Toggle sort direction"
@@ -685,14 +827,18 @@ export default function ProjectsPage() {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => void loadProjects()}
+            onClick={() => {
+              void loadProjects();
+            }}
             className="px-3 py-2 rounded-md bg-white/10 text-white hover:bg-white/20 text-sm"
             disabled={!user || loading}
           >
             Refresh
           </button>
           <button
-            onClick={() => setShowCreate((v) => !v)}
+            onClick={() => {
+              setShowCreate((v) => !v);
+            }}
             className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-500 disabled:opacity-50"
             disabled={!user}
           >
@@ -703,7 +849,7 @@ export default function ProjectsPage() {
 
       {showCreate && (
         <form
-          onSubmit={createProject}
+          onSubmit={(e) => { void createProject(e); }}
           className="bg-white/5 border border-white/10 rounded-lg p-4 space-y-3"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -713,7 +859,9 @@ export default function ProjectsPage() {
                 className="bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white placeholder-purple-200/70"
                 placeholder="e.g. Portfolio Website"
                 value={form.title}
-                onChange={(e) => setForm((s) => ({ ...s, title: e.target.value }))}
+                onChange={(e) => {
+                  setForm((s) => ({ ...s, title: e.target.value }));
+                }}
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -721,9 +869,12 @@ export default function ProjectsPage() {
               <select
                 className="bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white"
                 value={form.status}
-                onChange={(e) =>
-                  setForm((s) => ({ ...s, status: e.target.value as ProjectStatus }))
-                }
+                onChange={(e) => {
+                  setForm((s) => ({
+                    ...s,
+                    status: e.target.value as ProjectStatus,
+                  }));
+                }}
               >
                 {statusOptions.map((s) => (
                   <option key={s} value={s}>
@@ -737,9 +888,12 @@ export default function ProjectsPage() {
               <select
                 className="bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white"
                 value={form.priority}
-                onChange={(e) =>
-                  setForm((s) => ({ ...s, priority: Number(e.target.value) as 1 | 2 | 3 }))
-                }
+                onChange={(e) => {
+                  setForm((s) => ({
+                    ...s,
+                    priority: Number(e.target.value) as 1 | 2 | 3,
+                  }));
+                }}
               >
                 {priorityOptions.map((p) => (
                   <option key={p.value} value={p.value}>
@@ -754,7 +908,9 @@ export default function ProjectsPage() {
                 type="date"
                 className="bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white"
                 value={form.deadline}
-                onChange={(e) => setForm((s) => ({ ...s, deadline: e.target.value }))}
+                onChange={(e) => {
+                  setForm((s) => ({ ...s, deadline: e.target.value }));
+                }}
               />
             </div>
           </div>
@@ -765,9 +921,9 @@ export default function ProjectsPage() {
               className="bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white placeholder-purple-200/70 min-h-[90px]"
               placeholder="Brief description of the project"
               value={form.description}
-              onChange={(e) =>
-                setForm((s) => ({ ...s, description: e.target.value }))
-              }
+              onChange={(e) => {
+                setForm((s) => ({ ...s, description: e.target.value }));
+              }}
             />
           </div>
 
@@ -779,9 +935,9 @@ export default function ProjectsPage() {
               className="bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white placeholder-purple-200/70"
               placeholder="e.g. React, Next.js, Tailwind, Supabase"
               value={form.techStackInput}
-              onChange={(e) =>
-                setForm((s) => ({ ...s, techStackInput: e.target.value }))
-              }
+              onChange={(e) => {
+                setForm((s) => ({ ...s, techStackInput: e.target.value }));
+              }}
             />
           </div>
 
@@ -795,7 +951,9 @@ export default function ProjectsPage() {
             </button>
             <button
               type="button"
-              onClick={() => setShowCreate(false)}
+              onClick={() => {
+                setShowCreate(false);
+              }}
               className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20"
             >
               Cancel
@@ -816,7 +974,9 @@ export default function ProjectsPage() {
           <div className="text-red-200">{error}</div>
         ) : visibleProjects.length === 0 ? (
           <div className="bg-white/5 border border-white/10 rounded-lg p-6 text-purple-100 flex flex-col items-start gap-3">
-            <div className="text-white text-lg font-semibold">No projects found</div>
+            <div className="text-white text-lg font-semibold">
+              No projects found
+            </div>
             <div className="text-sm text-purple-200">
               {search || filterStatus !== "all"
                 ? "No projects match your filters. Try clearing search or status."
@@ -838,7 +998,9 @@ export default function ProjectsPage() {
               {user && (
                 <button
                   type="button"
-                  onClick={() => setShowCreate(true)}
+                  onClick={() => {
+                    setShowCreate(true);
+                  }}
                   className="px-3 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-500 text-sm"
                 >
                   Create project

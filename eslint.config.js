@@ -30,7 +30,10 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/explicit-function-return-type": [
         "error",
@@ -46,5 +49,5 @@ export default tseslint.config(
     // Configuration for JavaScript files (if any)
     files: ["**/*.js"],
     ...js.configs.recommended,
-  }
+  },
 );

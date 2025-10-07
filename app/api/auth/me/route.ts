@@ -1,8 +1,13 @@
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-import { NextRequest, NextResponse } from 'next/server';
-import { getSession, getSupabaseUser } from '@/lib/auth';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import {
+  getSession,
+  getSupabaseUser,
+  getUserRoleFromMetadata,
+} from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,8 +21,9 @@ export async function GET(req: NextRequest) {
       user: {
         id: user.id,
         email: user.email,
-        name: (user.user_metadata as any)?.name ?? '',
-        profile_image: (user.user_metadata as any)?.profile_image ?? '',
+        name: (user.user_metadata as any)?.name ?? "",
+        profile_image: (user.user_metadata as any)?.profile_image ?? "",
+        role: getUserRoleFromMetadata((user.user_metadata as any) || {}),
         is_email_verified: !!user.email_confirmed_at,
         is_phone_verified: false,
       },

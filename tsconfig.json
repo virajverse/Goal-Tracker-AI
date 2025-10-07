@@ -23,6 +23,7 @@
         "name": "next"
       }
     ],
+    "types": ["node", "react", "react-dom"],
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -35,11 +36,6 @@
     "noImplicitThis": true,
     "alwaysStrict": true
   },
-  "include": [
-    "app",
-    "src",
-    "next-env.d.ts",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["app", "src", "next-env.d.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

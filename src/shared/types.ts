@@ -64,7 +64,16 @@ export const AISuggestionSchema = z.object({
 
 export const CreateAISuggestionRequestSchema = z.object({
   context: z.string().optional(),
-  type: z.enum(["motivation", "tip", "reminder", "health", "productivity", "mindfulness"]).optional(),
+  type: z
+    .enum([
+      "motivation",
+      "tip",
+      "reminder",
+      "health",
+      "productivity",
+      "mindfulness",
+    ])
+    .optional(),
 });
 
 // Response schemas
@@ -88,4 +97,6 @@ export type DailyLog = z.infer<typeof DailyLogSchema>;
 export type CreateDailyLog = z.infer<typeof CreateDailyLogSchema>;
 export type UpdateDailyLog = z.infer<typeof UpdateDailyLogSchema>;
 export type AISuggestion = z.infer<typeof AISuggestionSchema>;
-export type CreateAISuggestionRequest = z.infer<typeof CreateAISuggestionRequestSchema>;
+export type CreateAISuggestionRequest = z.infer<
+  typeof CreateAISuggestionRequestSchema
+>;

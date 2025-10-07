@@ -1,17 +1,57 @@
-import { useState, useEffect } from 'react';
-import { Goal, CreateGoal, UpdateGoal } from '@/shared/types';
-import { useAuth } from '@/react-app/hooks/useCustomAuth';
-import toast from 'react-hot-toast';
+import { useState, useEffect, useCallback } from "react";
+import type { Goal, CreateGoal, UpdateGoal } from "@/shared/types";
+import { useAuth } from "@/react-app/hooks/useCustomAuth";
+import toast from "react-hot-toast";
 
-export function useGoals() {
+interface ApiErrorJson {
+  error?: unknown;
+}
+interface GoalsResponseJson {
+  goals?: Goal[];
+}
+interface GoalResponseJson {
+  goal?: Goal;
+}
+
+function extractErrorMessage(data: unknown, fallback: string): string {
+  if (data && typeof data === "object" && "error" in data) {
+    const err = (data as ApiErrorJson).error;
+    if (typeof err === "string") return err;
+  }
+  return fallback;
+}
+
+function extractGoals(data: unknown): Goal[] {
+  if (data && typeof data === "object" && "goals" in data) {
+    const g = (data as GoalsResponseJson).goals;
+    if (Array.isArray(g)) return g;
+  }
+  return [];
+}
+
+function extractGoal(data: unknown): Goal | null {
+  if (data && typeof data === "object" && "goal" in data) {
+    const g = (data as GoalResponseJson).goal;
+    if (g && typeof g === "object") return g;
+  }
+  return null;
+}
+
+export function useGoals(): {
+  goals: Goal[];
+  loading: boolean;
+  error: string | null;
+  createGoal: (goalData: CreateGoal) => Promise<Goal>;
+  updateGoal: (goalData: UpdateGoal) => Promise<Goal>;
+  deleteGoal: (goalId: number) => Promise<void>;
+  refetch: () => Promise<void>;
+} {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user, isLoading } = useAuth();
-  // Constant-length dependency key: auth loading state + user id
-  const depKey = `${isLoading ? '1' : '0'}|${user?.id ?? ''}`;
 
-  const fetchGoals = async () => {
+  const fetchGoals = useCallback(async (): Promise<void> => {
     try {
       // If not authenticated, treat as empty goals without error
       if (!user) {
@@ -20,105 +60,121 @@ export function useGoals() {
         return;
       }
       setLoading(true);
-      const response = await fetch('/api/goals');
-      let data: any = null;
+      const response = await fetch("/api/goals");
+      let data: unknown = null;
       try {
         data = await response.json();
-      } catch {}
+      } catch {
+        /* ignore json parse errors */
+      }
       if (!response.ok) {
-        const msg = (data && data.error) || 'Failed to fetch goals';
+        const msg = extractErrorMessage(data, "Failed to fetch goals");
         // Silently handle unauthorized (e.g., expired session)
-        if (response.status === 401 || msg === 'Unauthorized') {
+        if (response.status === 401 || msg === "Unauthorized") {
           setGoals([]);
           setError(null);
           return;
         }
         throw new Error(msg);
       }
-      setGoals((data && data.goals) || []);
+      setGoals(extractGoals(data));
       setError(null);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      const errorMessage =
+        err instanceof Error ? err.message : "An error occurred";
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
-  const createGoal = async (goalData: CreateGoal) => {
+  const createGoal = async (goalData: CreateGoal): Promise<Goal> => {
     try {
-      const response = await fetch('/api/goals', {
-        method: 'POST',
+      const response = await fetch("/api/goals", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(goalData),
       });
-      let data: any = null;
+      let data: unknown = null;
       try {
         data = await response.json();
-      } catch {}
+      } catch {
+        /* ignore json parse errors */
+      }
       if (!response.ok) {
-        const msg = (data && data.error) || 'Failed to create goal';
+        const msg = extractErrorMessage(data, "Failed to create goal");
         throw new Error(msg);
       }
-      setGoals(prev => [data.goal, ...prev]);
-      toast.success('Goal created successfully!');
-      return data.goal;
+      const newGoal = extractGoal(data);
+      if (!newGoal) {
+        throw new Error("Invalid server response");
+      }
+      setGoals((prev) => [newGoal, ...prev]);
+      toast.success("Goal created successfully!");
+      return newGoal;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to create goal';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to create goal";
       toast.error(errorMessage);
       throw err;
     }
   };
 
-  const updateGoal = async (goalData: UpdateGoal) => {
+  const updateGoal = async (goalData: UpdateGoal): Promise<Goal> => {
     try {
-      const response = await fetch(`/api/goals/${goalData.id}`, {
-        method: 'PUT',
+      const response = await fetch(`/api/goals/${String(goalData.id)}`, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(goalData),
       });
-      let data: any = null;
+      let data: unknown = null;
       try {
         data = await response.json();
-      } catch {}
+      } catch { /* ignore json parse errors */ }
       if (!response.ok) {
-        const msg = (data && data.error) || 'Failed to update goal';
+        const msg = extractErrorMessage(data, "Failed to update goal");
         throw new Error(msg);
       }
-      setGoals(prev => prev.map(goal => 
-        goal.id === goalData.id ? data.goal : goal
-      ));
-      toast.success('Goal updated successfully!');
-      return data.goal;
+      const updated = extractGoal(data);
+      if (!updated) {
+        throw new Error("Invalid server response");
+      }
+      setGoals((prev) =>
+        prev.map((goal) => (goal.id === goalData.id ? updated : goal)),
+      );
+      toast.success("Goal updated successfully!");
+      return updated;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to update goal';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to update goal";
       toast.error(errorMessage);
       throw err;
     }
   };
 
-  const deleteGoal = async (goalId: number) => {
+  const deleteGoal = async (goalId: number): Promise<void> => {
     try {
-      const response = await fetch(`/api/goals/${goalId}`, {
-        method: 'DELETE',
+      const response = await fetch(`/api/goals/${String(goalId)}`, {
+        method: "DELETE",
       });
-      let data: any = null;
+      let data: unknown = null;
       try {
         data = await response.json();
-      } catch {}
+      } catch { /* ignore json parse errors */ }
       if (!response.ok) {
-        const msg = (data && data.error) || 'Failed to delete goal';
+        const msg = extractErrorMessage(data, "Failed to delete goal");
         throw new Error(msg);
       }
-      setGoals(prev => prev.filter(goal => goal.id !== goalId));
-      toast.success('Goal deleted successfully!');
+      setGoals((prev) => prev.filter((goal) => goal.id !== goalId));
+      toast.success("Goal deleted successfully!");
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to delete goal';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to delete goal";
       toast.error(errorMessage);
       throw err;
     }
@@ -126,8 +182,8 @@ export function useGoals() {
 
   useEffect(() => {
     if (isLoading) return; // wait for auth resolution
-    fetchGoals();
-  }, [depKey]);
+    void fetchGoals();
+  }, [fetchGoals, isLoading]);
 
   return {
     goals,

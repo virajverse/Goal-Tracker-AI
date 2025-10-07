@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
+import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 
 export default function AuthCallbackPage() {
   useEffect(() => {
     // No third-party exchange needed; redirect to home.
-    window.location.href = '/';
+    window.location.href = "/";
   }, []);
 
   return (

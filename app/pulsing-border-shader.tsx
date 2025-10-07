@@ -1,89 +1,43 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
+import React from "react";
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'pulsing-border': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
-        colors?: string;
-        colorBack?: string;
-        speed?: number;
-        roundness?: number;
-        thickness?: number;
-        intensity?: number;
-        spotsPerColor?: number;
-        spotSize?: number;
-        pulse?: number;
-        smoke?: number;
-        smokeSize?: number;
-        scale?: number;
-        rotation?: number;
-        frame?: number;
-      }, HTMLElement>;
-    }
-  }
-}
-
-export function PulsingBorderShader({
-  className = '',
-  color = '#8b5cf6',
-  ...props
-}: {
+type PulsingBorderShaderProps = {
   className?: string;
-  color?: string;
-  [key: string]: any;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
+  color?: string; // hex or rgba
+};
 
-  useEffect(() => {
-    // This is a simplified version of the shader effect
-    // In a real implementation, you would use WebGL or a library like Three.js
-    // For now, we'll use CSS animations for the pulsing effect
-    if (ref.current) {
-      ref.current.style.setProperty('--pulse-color', color);
-    }
-  }, [color]);
+// Minimal replacement for the missing shader component.
+// Renders a circular pulsing ring that matches the prior API shape
+// used by app/landing-page.tsx: <PulsingBorderShader className="h-56 w-56" color="#7c3aed" />
+export function PulsingBorderShader({
+  className = "",
+  color = "#8b5cf6",
+}: PulsingBorderShaderProps) {
+  const outerStyle: React.CSSProperties = {
+    position: "relative",
+    display: "inline-block",
+  };
+
+  const ringStyle: React.CSSProperties = {
+    width: "100%",
+    height: "100%",
+    borderRadius: "9999px",
+    border: `2px solid ${color}`,
+    boxShadow: `0 0 14px ${color}55, inset 0 0 6px ${color}33`,
+    background: "transparent",
+    animation: "gt-pulse 2.4s ease-in-out infinite",
+  };
 
   return (
-    <div 
-      ref={ref}
-      className={`relative ${className}`}
-      style={{
-        '--pulse-color': color,
-        '--pulse-scale': 1,
-      } as React.CSSProperties}
-      {...props}
-    >
-      <div 
-        className="absolute inset-0 rounded-lg overflow-hidden"
-        style={{
-          padding: '2px',
-          background: `linear-gradient(45deg, ${color}00, ${color}80, ${color}00)`,
-          backgroundSize: '200% 200%',
-          animation: 'pulse 3s ease-in-out infinite',
-        }}
-      >
-        <div className="w-full h-full bg-white rounded-md"></div>
-      </div>
+    <div className={className} style={outerStyle} aria-hidden>
       <style jsx>{`
-        @keyframes pulse {
-          0% {
-            background-position: 0% 50%;
-            opacity: 0.3;
-          }
-          50% {
-            background-position: 100% 50%;
-            opacity: 0.8;
-          }
-          100% {
-            background-position: 0% 50%;
-            opacity: 0.3;
-          }
+        @keyframes gt-pulse {
+          0%, 100% { box-shadow: 0 0 14px ${color}55, inset 0 0 6px ${color}33; }
+          50% { box-shadow: 0 0 28px ${color}88, inset 0 0 12px ${color}55; }
         }
       `}</style>
+      <div style={ringStyle} />
     </div>
   );
 }
-
-export default PulsingBorderShader;

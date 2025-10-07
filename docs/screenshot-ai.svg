@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect fill="#0b1020" width="1280" height="720"/>
+  <g font-family="Inter,system-ui" fill="#fff">
+    <text x="48" y="72" font-size="34" font-weight="800">AI Coach</text>
+    <text x="48" y="104" font-size="16" fill="#94a3b8">Personalized, actionable guidance</text>
+  </g>
+  <g transform="translate(48,140)">
+    <rect width="1184" height="520" rx="18" fill="#0f172a" stroke="#1f2937"/>
+    <g transform="translate(24,24)">
+      <rect x="0" y="0" width="700" height="60" rx="12" fill="#111827"/>
+      <text x="16" y="36" font-size="16" fill="#d1d5db" font-family="Inter">How can I improve my consistency?</text>
+      <rect x="0" y="80" width="900" height="120" rx="12" fill="#0b1220" stroke="#1f2937"/>
+      <text x="16" y="110" font-size="16" fill="#9ca3af" font-family="Inter">Here are 3 quick wins to boost consistency:</text>
+      <rect x="16" y="126" width="860" height="12" rx="6" fill="#1f2937"/>
+      <rect x="16" y="146" width="820" height="12" rx="6" fill="#1f2937"/>
+    </g>
+    <g transform="translate(24,420)">
+      <rect x="0" y="0" width="1040" height="48" rx="10" fill="#111827"/>
+      <text x="16" y="30" font-size="16" fill="#94a3b8" font-family="Inter">Type your prompt...</text>
+      <rect x="1060" y="0" width="80" height="48" rx="10" fill="#22c55e"/>
+      <text x="1084" y="30" font-size="16" fill="#052e16" font-weight="700" font-family="Inter">Send</text>
+    </g>
+  </g>
+</svg>

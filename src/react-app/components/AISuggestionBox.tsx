@@ -1,33 +1,66 @@
-import { useState } from 'react';
-import { Sparkles, RefreshCw, Lightbulb, Heart, Bell, MessageSquare } from 'lucide-react';
-import Link from 'next/link';
-import { useAISuggestions } from '@/react-app/hooks/useAISuggestions';
-import { AISuggestion } from '@/shared/types';
+import React, { useState } from "react";
+import {
+  Sparkles,
+  RefreshCw,
+  Lightbulb,
+  Heart,
+  Bell,
+  MessageSquare,
+} from "lucide-react";
+import Link from "next/link";
+import { useAISuggestions } from "@/react-app/hooks/useAISuggestions";
+import type { AISuggestion, CreateAISuggestionRequest } from "@/shared/types";
 
 interface AISuggestionBoxProps {
   onSuggestionGenerated?: (suggestion: AISuggestion) => void;
 }
 
-export default function AISuggestionBox({ onSuggestionGenerated }: AISuggestionBoxProps) {
-  const [currentSuggestion, setCurrentSuggestion] = useState<AISuggestion | null>(null);
-  const [context, setContext] = useState('');
+export default function AISuggestionBox({
+  onSuggestionGenerated,
+}: AISuggestionBoxProps): React.ReactElement {
+  const [currentSuggestion, setCurrentSuggestion] =
+    useState<AISuggestion | null>(null);
+  const [context, setContext] = useState("");
   const { generateSuggestion, loading } = useAISuggestions();
 
-  const suggestionTypes = [
-    { type: 'motivation', icon: Heart, label: 'Motivation', color: 'text-red-400' },
-    { type: 'tip', icon: Lightbulb, label: 'Tips', color: 'text-yellow-400' },
-    { type: 'reminder', icon: Bell, label: 'Reminder', color: 'text-blue-400' },
-    { type: 'health', icon: Heart, label: 'Health', color: 'text-green-400' },
-    { type: 'productivity', icon: RefreshCw, label: 'Productivity', color: 'text-purple-400' },
-    { type: 'mindfulness', icon: Sparkles, label: 'Mindfulness', color: 'text-indigo-400' },
-  ];
+  type AISuggestionType = NonNullable<CreateAISuggestionRequest["type"]>;
+  type IconType = typeof Heart;
 
-  const handleGenerateSuggestion = async (type?: string) => {
-    const suggestion = await generateSuggestion({ 
-      context: context.trim() || undefined, 
-      type: type as any 
+  const suggestionTypes = [
+    {
+      type: "motivation",
+      icon: Heart,
+      label: "Motivation",
+      color: "text-red-400",
+    },
+    { type: "tip", icon: Lightbulb, label: "Tips", color: "text-yellow-400" },
+    { type: "reminder", icon: Bell, label: "Reminder", color: "text-blue-400" },
+    { type: "health", icon: Heart, label: "Health", color: "text-green-400" },
+    {
+      type: "productivity",
+      icon: RefreshCw,
+      label: "Productivity",
+      color: "text-purple-400",
+    },
+    {
+      type: "mindfulness",
+      icon: Sparkles,
+      label: "Mindfulness",
+      color: "text-indigo-400",
+    },
+  ] satisfies readonly {
+    type: AISuggestionType;
+    icon: IconType;
+    label: string;
+    color: string;
+  }[];
+
+  const handleGenerateSuggestion = async (type?: AISuggestionType): Promise<void> => {
+    const suggestion = await generateSuggestion({
+      context: context.trim() || undefined,
+      type,
     });
-    
+
     if (suggestion) {
       setCurrentSuggestion(suggestion);
       onSuggestionGenerated?.(suggestion);
@@ -50,7 +83,9 @@ export default function AISuggestionBox({ onSuggestionGenerated }: AISuggestionB
       <div className="mb-4">
         <textarea
           value={context}
-          onChange={(e) => setContext(e.target.value)}
+          onChange={(e) => {
+            setContext(e.target.value);
+          }}
           placeholder="Tell me about your current situation or challenges..."
           className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-400"
           rows={2}
@@ -60,7 +95,9 @@ export default function AISuggestionBox({ onSuggestionGenerated }: AISuggestionB
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-2 mb-4">
         <button
-          onClick={() => handleGenerateSuggestion()}
+          onClick={() => {
+            void handleGenerateSuggestion();
+          }}
           disabled={loading}
           className="flex items-center space-x-2 px-4 py-2 bg-purple-500 hover:bg-purple-600 disabled:bg-purple-500/50 text-white text-sm font-medium rounded-lg transition-colors"
         >
@@ -69,13 +106,15 @@ export default function AISuggestionBox({ onSuggestionGenerated }: AISuggestionB
           ) : (
             <Sparkles className="w-4 h-4" />
           )}
-          <span>{loading ? 'Thinking...' : 'Get Suggestion'}</span>
+          <span>{loading ? "Thinking..." : "Get Suggestion"}</span>
         </button>
 
         {suggestionTypes.map(({ type, icon: Icon, label, color }) => (
           <button
             key={type}
-            onClick={() => handleGenerateSuggestion(type)}
+            onClick={() => {
+              void handleGenerateSuggestion(type);
+            }}
             disabled={loading}
             className="flex items-center space-x-2 px-3 py-2 bg-white/10 hover:bg-white/20 disabled:bg-white/5 text-white text-sm rounded-lg transition-colors"
           >

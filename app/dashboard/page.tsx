@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Dashboard from '@/react-app/pages/Dashboard';
+import Dashboard from "@/react-app/pages/Dashboard";
 
 export default function Page() {
   return <Dashboard />;

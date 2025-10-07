@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect fill="#0b1020" width="1280" height="720"/>
+  <g font-family="Inter,system-ui" fill="#fff">
+    <text x="48" y="72" font-size="34" font-weight="800">Analytics</text>
+    <text x="48" y="104" font-size="16" fill="#94a3b8">See patterns, celebrate progress</text>
+  </g>
+  <g transform="translate(48,140)">
+    <rect width="1184" height="520" rx="18" fill="#0f172a" stroke="#1f2937"/>
+    <g transform="translate(24,24)">
+      <rect width="540" height="220" rx="14" fill="#0b1220" stroke="#1f2937"/>
+      <text x="16" y="32" font-size="16" fill="#e5e7eb">Streaks</text>
+      <rect x="16" y="48" width="500" height="140" rx="8" fill="#111827"/>
+      <rect x="32" y="60" width="20" height="80" fill="#22c55e" rx="4"/>
+      <rect x="64" y="60" width="20" height="40" fill="#14b8a6" rx="4"/>
+      <rect x="96" y="60" width="20" height="120" fill="#0ea5e9" rx="4"/>
+    </g>
+    <g transform="translate(588,24)">
+      <rect width="572" height="220" rx="14" fill="#0b1220" stroke="#1f2937"/>
+      <text x="16" y="32" font-size="16" fill="#e5e7eb">Completion</text>
+      <rect x="16" y="48" width="540" height="140" rx="8" fill="#111827"/>
+      <circle cx="120" cy="118" r="56" fill="#0ea5e9" opacity="0.2"/>
+      <circle cx="120" cy="118" r="48" fill="#22c55e" opacity="0.5"/>
+      <circle cx="120" cy="118" r="40" fill="#7c3aed" opacity="0.7"/>
+    </g>
+    <g transform="translate(24,260)">
+      <rect width="1136" height="236" rx="14" fill="#0b1220" stroke="#1f2937"/>
+      <text x="16" y="36" font-size="16" fill="#e5e7eb">Insights</text>
+      <rect x="16" y="60" width="1096" height="14" rx="7" fill="#111827"/>
+      <rect x="16" y="86" width="900" height="14" rx="7" fill="#111827"/>
+      <rect x="16" y="112" width="780" height="14" rx="7" fill="#111827"/>
+    </g>
+  </g>
+</svg>
