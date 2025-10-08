@@ -20,9 +20,27 @@ pnpm-debug.log*
 .env.*.local
 .env.*
 
+
 # Vercel
 .vercel/
 
 # Misc
 .DS_Store
 .vscode/
+
+# OS / IDE
+.idea/
+.vs/
+Thumbs.db
+desktop.ini
+
+# Caches
+.eslintcache
+.cache/
+.turbo/
+.swc/
+
+# Coverage / reports
+coverage/
+.nyc_output/
+

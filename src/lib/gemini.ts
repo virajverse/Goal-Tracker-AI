@@ -33,6 +33,14 @@ const DEFAULT_FALLBACKS: string[] = Array.from(
   ]),
 );
 
+function normalizeModelName(name: string): string {
+  let n = name.trim();
+  if (n.startsWith("models/")) n = n.slice("models/".length);
+  if (n === "gemini-1.5-flash") return "gemini-1.5-flash-001";
+  if (n === "gemini-1.5-pro") return "gemini-1.5-pro-001";
+  return n;
+}
+
 export async function listAvailableModels(): Promise<string[]> {
   // Uses REST ListModels; filters to those supporting generateContent
   const { gemini } = await getAIConfig();
@@ -53,10 +61,7 @@ export async function listAvailableModels(): Promise<string[]> {
       )
       .map((m) => m.name)
       .filter((n): n is string => typeof n === "string" && !!n)
-      .map((n) => {
-        // API returns names like "models/gemini-1.5-flash-001"; normalize to short name
-        return n.startsWith("models/") ? n.slice("models/".length) : n;
-      });
+      .map((n) => normalizeModelName(n));
     return names;
   } catch {
     return [];
@@ -87,9 +92,11 @@ export async function generateText({
   try {
     // Build prioritized model list
     const priority: string[] = [];
-    if (model && typeof model === "string" && model.trim()) priority.push(model);
-    if (Array.isArray(fallbacks)) priority.push(...fallbacks);
-    priority.push(...DEFAULT_FALLBACKS);
+    if (model && typeof model === "string" && model.trim())
+      priority.push(normalizeModelName(model));
+    if (Array.isArray(fallbacks))
+      priority.push(...fallbacks.map((m) => normalizeModelName(m)));
+    priority.push(...DEFAULT_FALLBACKS.map((m) => normalizeModelName(m)));
     const prioritized = Array.from(new Set(priority));
 
     // Optionally filter to available models (best-effort)
@@ -98,14 +105,17 @@ export async function generateText({
     if (available.length) {
       candidates = prioritized.filter((m) => available.includes(m));
       // If the preferred model was not in available (API sometimes lags), keep it at front anyway
-      if (model && !candidates.includes(model)) candidates = [model, ...candidates];
+      if (model) {
+        const nm = normalizeModelName(model);
+        if (!candidates.includes(nm)) candidates = [nm, ...candidates];
+      }
     }
     if (!candidates.length) candidates = prioritized; // fallback to all if list failed
 
     let lastErr: unknown = null;
     for (const m of candidates) {
       try {
-        const g = await getGenerativeModel(m);
+        const g = await getGenerativeModel(normalizeModelName(m));
         const genPromise = g
           .generateContent({
             contents: [{ role: "user", parts: [{ text: prompt }] }],
